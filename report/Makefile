@@ -1,24 +1,26 @@
 .SUFFIXES:	.pdf .md
 
-.md.pdf:
-# add --listing for captions in listings...
-	pandoc --resource-path=img $*.md -f markdown -o $*.pdf
-
 IMGPATH=img
 
 IMG = \
-	$(IMGPATH)/q1_heatmap_0_120.png \
-	$(IMGPATH)/q1_heatmap_26_120.png \
+	$(IMGPATH)/age_music_heatmap_0_120.png \
+	$(IMGPATH)/age_music_heatmap_26_120.png \
+	$(IMGPATH)/age_color_heatmap_0_120.png \
+	$(IMGPATH)/age_color_heatmap_26_120.png \
+	$(IMGPATH)/laplace_pdf.png \
 
 
-.PHONY: all clean mrproper
+.PHONY: clean mrproper
 
-all: assignment.pdf
-
-assignment.pdf: $(IMG)
+assignment.pdf: assignment.md $(IMG)
+	pandoc --listing --resource-path=img $*.md -f markdown -o $*.pdf
 
 clean:
 	rm -fv *.aux *.bbl *.blg *.log *.out *.toc
+
+$(IMG): generate_results.py
+	python3 generate_results.py
+
 
 mrproper: clean
 	rm -fv *.pdf
